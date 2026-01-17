@@ -4,7 +4,7 @@ title: Home
 nav_order: 1
 ---
 
-# Nathan Krebs Skills
+# My Claude Code Skills
 
 A collection of Claude Code skills for AI-assisted development workflows.
 {: .fs-6 .fw-300 }
