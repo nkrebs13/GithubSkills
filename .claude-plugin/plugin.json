@@ -1,0 +1,40 @@
+{
+  "name": "nathankrebs-skills",
+  "version": "1.0.0",
+  "description": "Personal Claude Code skills for AI-assisted development workflows",
+  "author": {
+    "name": "Nathan Krebs",
+    "github": "nkrebs13"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/nkrebs13/GithubSkills",
+  "skills": {
+    "asset-gen": {
+      "path": "./skills/asset-gen",
+      "description": "Generate app icons, splash screens, and marketing assets using Gemini API"
+    },
+    "audit-project": {
+      "path": "./skills/audit-project",
+      "description": "Analyze Claude Code configuration and suggest improvements"
+    },
+    "sync-skills": {
+      "path": "./skills/sync-skills",
+      "description": "Bidirectional sync between local skills and repository"
+    },
+    "validate-skills": {
+      "path": "./skills/validate-skills",
+      "description": "Validate skills for proper structure, frontmatter, and conventions"
+    },
+    "scaffold-skill": {
+      "path": "./skills/scaffold-skill",
+      "description": "Generate new skill from template with proper structure"
+    },
+    "scan-secrets": {
+      "path": "./skills/scan-secrets",
+      "description": "Security scan to detect API keys, tokens, and sensitive data"
+    }
+  },
+  "engines": {
+    "claude-code": ">=1.0.0"
+  }
+}

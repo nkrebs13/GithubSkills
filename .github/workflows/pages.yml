@@ -1,0 +1,109 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'skills/**/SKILL.md'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: docs
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+
+      - name: Create Gemfile
+        run: |
+          cat > docs/Gemfile << 'EOF'
+          source "https://rubygems.org"
+          gem "jekyll", "~> 4.3"
+          gem "just-the-docs"
+          gem "jekyll-remote-theme"
+          EOF
+
+      - name: Generate Skills Pages
+        run: |
+          mkdir -p docs/_skills
+          for skill_dir in skills/*/; do
+            skill_name=$(basename "$skill_dir")
+            skill_md="$skill_dir/SKILL.md"
+            if [ -f "$skill_md" ]; then
+              description=$(grep "^description:" "$skill_md" | head -1 | sed 's/^description: //')
+              cat > "docs/_skills/${skill_name}.md" << EOF
+          ---
+          layout: default
+          title: ${skill_name}
+          parent: Skills
+          nav_order: 2
+          ---
+
+          EOF
+              sed -n '/^---$/,/^---$/!p' "$skill_md" >> "docs/_skills/${skill_name}.md"
+            fi
+          done
+
+      - name: Create Skills Index
+        run: |
+          cat > docs/skills.md << 'EOF'
+          ---
+          layout: default
+          title: Skills
+          nav_order: 2
+          has_children: true
+          ---
+
+          # Skills Reference
+
+          Detailed documentation for each skill in the collection.
+          EOF
+
+      - name: Build with Jekyll
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          cd docs
+          bundle install
+          bundle exec jekyll build --baseurl "$BASE_PATH"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/_site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

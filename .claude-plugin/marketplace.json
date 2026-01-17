@@ -1,0 +1,27 @@
+{
+  "name": "nathankrebs-skills",
+  "owner": {
+    "name": "Nathan Krebs",
+    "github": "nkrebs13"
+  },
+  "metadata": {
+    "description": "Personal Claude Code skills for AI-assisted development workflows",
+    "version": "1.0.0",
+    "keywords": ["claude-code", "skills", "ai-tools", "developer-tools"],
+    "repository": "https://github.com/nkrebs13/GithubSkills"
+  },
+  "plugins": [
+    {
+      "name": "dev-tools",
+      "source": "./",
+      "skills": [
+        "./skills/asset-gen",
+        "./skills/audit-project",
+        "./skills/sync-skills",
+        "./skills/validate-skills",
+        "./skills/scaffold-skill",
+        "./skills/scan-secrets"
+      ]
+    }
+  ]
+}

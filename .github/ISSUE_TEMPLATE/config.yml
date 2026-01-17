@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Claude Code Documentation
+    url: https://docs.anthropic.com/claude-code
+    about: Official Claude Code documentation
+  - name: Skills Catalog
+    url: https://nkrebs13.github.io/GithubSkills/
+    about: Browse the skills catalog and documentation

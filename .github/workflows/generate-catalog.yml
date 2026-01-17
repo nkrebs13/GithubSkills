@@ -1,0 +1,88 @@
+name: Generate Skills Catalog
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'skills/**/SKILL.md'
+      - 'skills/**/README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate Skills Catalog JSON
+        run: |
+          mkdir -p docs/_data
+          python3 << 'PYEOF'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          def parse_frontmatter(content):
+              match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
+              if not match:
+                  return {}
+              result = {}
+              for line in match.group(1).split('\n'):
+                  if ':' in line and not line.startswith(' '):
+                      key, _, value = line.partition(':')
+                      key = key.strip()
+                      value = value.strip().strip('"').strip("'")
+                      if value.lower() == 'true':
+                          value = True
+                      elif value.lower() == 'false':
+                          value = False
+                      result[key] = value
+              return result
+
+          skills = []
+          skills_dir = Path('skills')
+          for skill_dir in sorted(skills_dir.iterdir()):
+              if not skill_dir.is_dir():
+                  continue
+              skill_md = skill_dir / 'SKILL.md'
+              if not skill_md.exists():
+                  continue
+              content = skill_md.read_text()
+              frontmatter = parse_frontmatter(content)
+              if frontmatter.get('publish') is False:
+                  continue
+              skill_info = {
+                  'name': frontmatter.get('name', skill_dir.name),
+                  'description': frontmatter.get('description', ''),
+                  'version': frontmatter.get('version', ''),
+                  'author': frontmatter.get('author', ''),
+                  'path': str(skill_dir),
+                  'has_readme': (skill_dir / 'README.md').exists(),
+                  'has_scripts': (skill_dir / 'scripts').exists(),
+              }
+              skills.append(skill_info)
+
+          catalog = {'generated': True, 'count': len(skills), 'skills': skills}
+          with open('docs/_data/skills.json', 'w') as f:
+              json.dump(catalog, f, indent=2)
+          print(f"Generated catalog with {len(skills)} skills")
+          PYEOF
+
+      - name: Commit Catalog
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/_data/skills.json
+          git diff --staged --quiet || git commit -m "Update skills catalog [skip ci]"
+          git push

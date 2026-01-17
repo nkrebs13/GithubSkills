@@ -1,0 +1,81 @@
+name: New Skill Request
+description: Request a new skill to be added
+title: "[Skill Request]: "
+labels: ["skill-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea for a new skill? Let's discuss it!
+
+  - type: input
+    id: name
+    attributes:
+      label: Suggested Skill Name
+      description: What would you call this skill?
+      placeholder: my-awesome-skill
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Skill Description
+      description: What would this skill do?
+      placeholder: This skill would help with...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Skill Type
+      description: What kind of skill would this be?
+      options:
+        - Prompt-based (Claude follows instructions)
+        - Script-based (has Python/shell scripts)
+        - Hybrid (both prompts and scripts)
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases
+      description: When would someone use this skill?
+      placeholder: |
+        1. When developing...
+        2. To automate...
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Usage
+      description: Show how you'd expect to use this skill
+      placeholder: |
+        User: /new-skill
+        Claude: [What happens]
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this skill to you?
+      options:
+        - Nice to have
+        - Would be helpful
+        - Really need this
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      description: Would you like to help build this skill?
+      options:
+        - label: I'd like to contribute to building this skill
+        - label: I can help test this skill

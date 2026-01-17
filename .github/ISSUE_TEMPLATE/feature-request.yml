@@ -1,0 +1,66 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please describe what you'd like to see.
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Feature Scope
+      description: Is this for an existing skill or something new?
+      options:
+        - Enhancement to existing skill
+        - New skill request
+        - Repository/infrastructure improvement
+        - Documentation improvement
+    validations:
+      required: true
+
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Related Skill
+      description: Which skill does this relate to? (if applicable)
+      options:
+        - asset-gen
+        - audit-project
+        - sync-skills
+        - validate-skills
+        - scaffold-skill
+        - scan-secrets
+        - N/A - New skill
+        - N/A - Infrastructure
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions you've considered?
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, mockups, or examples
